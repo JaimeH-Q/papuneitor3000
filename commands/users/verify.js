@@ -15,7 +15,7 @@ module.exports = {
         const userName = interaction.user.username;
 
         if (interaction.member.roles.cache.has(userRoleId)){
-            await interaction.reply({content: 'Ya te tengo en el registro. No es necesario que uses este comando de nuevo.', ephemeral: true});
+            await interaction.reply({content: 'Ya estás registrado. No es necesario que uses este comando de nuevo.', ephemeral: true});
             return;
         }
         
@@ -37,7 +37,7 @@ module.exports = {
         const formattedCode = '`' + user_code + '`';
         try {
             if (await isNewUser(userName)){
-                await interaction.user.send(`Saludos, extranjero. Tu código secreto es ${formattedCode}`);
+                await interaction.user.send(`Saludos. Tu código secreto es ${formattedCode}`);
                 await interaction.user.send(`Si el código no funciona, puedes usar nuevamente el comando.`);
                 await firstTimeSetup(interaction.user, user_code);
             } else {

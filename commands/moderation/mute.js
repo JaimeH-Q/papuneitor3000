@@ -25,7 +25,7 @@ module.exports = {
         const reason = interaction.options.getString('motivo', false);
         let formmatedReason = '`(Motivo: ' + reason + ')`';
         const moderatorUsername = interaction.user.displayName;
-        const mutedRole = await interaction.guild.roles.cache.get("1153875784830816277");
+        const mutedRole = await interaction.guild.roles.cache.get("1284999845911990323");
         const targetMember = await interaction.guild.members.fetch(`${userId.id}`);
         if (!reason){
             formmatedReason = "`Sin motivo`";
@@ -37,7 +37,7 @@ module.exports = {
         }
 
         if (userId == interaction.user){
-            interaction.reply({content: `No puedes silenciarte a ti mismo ${interaction.user}, ¡Solo deja de hablar!`, ephemeral: true});
+            interaction.reply({content: `No puedes silenciarte a tí mismo ${interaction.user}.`, ephemeral: true});
             return;
         }
 
@@ -56,13 +56,13 @@ module.exports = {
         try {
             const result = await muteUser(targetMember, mutedRole);
             await moderationLib.addPunishment(userId.username, 'mutes', reason, moderatorUsername);
-            await userId.send(`Fuiste silenciado en el servidor! ${formmatedReason}`);
             if (result == false){
                 interaction.editReply({content: `El usuario ${userId} ya está silenciado!`, components: []});
                 return;
             }
             interaction.deleteReply();
             interaction.channel.send({content: `${userId} fue silenciado por **${moderatorUsername}** ${formmatedReason}`});
+            await userId.send(`Fuiste silenciado en el servidor! ${formmatedReason}`);
         } catch (error){
             console.log(error);
         }

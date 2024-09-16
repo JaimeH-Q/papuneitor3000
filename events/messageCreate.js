@@ -21,13 +21,13 @@ module.exports = {
 
 async function YouPingedMe(mode, msg){
     if (mode == "only"){
-        return msg.channel.send("¡Hola! En que puedo ayudarte?");
+        return msg.channel.send("Hola " + msg.author.displayName + ", ¿en que puedo ayudarte?");
     }
     return msg.channel.send("... 👀");
 }
 
 async function parseCommand(message){
-    const content = message.content.subString(1);
+    const content = message.content.slice(1);
     const channel = message.channel;
     const author = message.author;
     switch (content){

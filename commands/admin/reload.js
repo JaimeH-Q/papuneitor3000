@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
 const path = require('node:path');
 const fs = require('node:fs');
 
@@ -6,6 +6,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('reload')
 		.setDescription('Recarga un comando.')
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator)
 		.addStringOption(option =>
 			option.setName('command')
 				.setDescription('El comando a recargar.')
@@ -13,6 +14,8 @@ module.exports = {
 	async execute(interaction) {
 		const commandName = interaction.options.getString('command', true).toLowerCase();
 		const command = interaction.client.commands.get(commandName);
+		const user = interaction.user;
+
 
 		if (!command) {
 			return interaction.reply(`No hay ningún comando llamado \`${commandName}\`!`);

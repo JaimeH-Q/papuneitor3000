@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, PermissionsBitField, ButtonBuilder, ActionRowBuilder, ButtonStyle, formatEmoji } = require('discord.js');
 const moderationLib = require('../../my-modules/moderationlib/moderationLib.js');
+const embedUtils = require('../../my-modules/messageUtils/embedUtils.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -20,7 +21,9 @@ module.exports = {
         const reason = interaction.options.getString('motivo', true);
         let formmatedReason = '`(Motivo: ' + reason + ')`';
         const moderatorUsername = interaction.user.displayName;
+        const moderator = interaction.user;
         if (!reason){
+            reason = "Sin motivo"
             formmatedReason = "`Sin motivo`";
         }
 
@@ -54,7 +57,10 @@ module.exports = {
             console.log(error);
         }
         interaction.deleteReply();
-        interaction.channel.send({content: `${userId} recibió una advertencia de **${moderatorUsername}** ${formmatedReason}`});
+        //interaction.channel.send({content: `${userId} recibió una advertencia de **${moderatorUsername}** ${formmatedReason}`});
+
+
+        interaction.channel.send({embeds: [embedUtils.getModerationEmbed("warn", moderator, userId, reason, null)]});
     }
 }
 

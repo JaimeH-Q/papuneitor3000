@@ -8,9 +8,9 @@ async function addPunishment(username, sanction, reason, moderator){
     let userinfo_sanctionNumber = userinfo_file[username]['moderationStats'][sanction];
     userinfo_file[username]['moderationStats'][sanction] = userinfo_sanctionNumber + 1;
     userinfo_file[username]['history'][sanction].push({
-        "Fecha": getDate(),
-        "Moderador": moderator,
-        "Motivo": reason,
+        "date": getDate(),
+        "staff": moderator,
+        "reason": reason,
     });
     
     const dataToSend = {
