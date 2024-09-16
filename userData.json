@@ -1,22 +1,3 @@
 {
-  "jaim3_": {
-    "discord": {
-      "id": "396514978087305220",
-      "code": "qZmKX"
-    },
-    "moderationStats": {
-      "moderationPoints": 0,
-      "warns": 0,
-      "mutes": 0,
-      "kicks": 0,
-      "bans": 0
-    },
-    "history": {
-      "bans": [],
-      "kicks": [],
-      "mutes": [],
-      "warns": []
-    },
-    "minecraft": {}
-  }
+
 }
