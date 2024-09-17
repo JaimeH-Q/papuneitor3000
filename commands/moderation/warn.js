@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, PermissionsBitField, ButtonBuilder, ActionRowBuilder, ButtonStyle, formatEmoji } = require('discord.js');
 const moderationLib = require('../../my-modules/moderationlib/moderationLib.js');
+const userInfoLib = require("../../my-modules/userInfo/userinfo.js")
 const embedUtils = require('../../my-modules/messageUtils/embedUtils.js');
 
 module.exports = {
@@ -37,6 +38,16 @@ module.exports = {
             return;
         }
 
+        if (userId.id == 1285038447295463476){
+            interaction.reply({content: `¡Eh! No hice nada malo.`, ephemeral: true});
+            return;
+        }
+
+        if(!await userInfoLib.registeredUser(userId)){
+            interaction.reply({content: `Todavía no tengo registros de ${userId}. ¿Está verificado?`, ephemeral: true});
+            return;
+        }
+
         const response = await interaction.reply({content: `Estás seguro de querer advertir a ${userId}?`, components: [createConfirmationRow()], ephemeral: true});
         const collectorFilter = i => i.user.id === interaction.user.id;
         try {
@@ -51,7 +62,7 @@ module.exports = {
         }
 
         try {
-            await moderationLib.addPunishment(userId.username, 'warns', reason, moderatorUsername);
+            await moderationLib.addPunishment(userId.username, 'warns', reason, moderator, null);
             await userId.send(`Recibiste una advertencia! ${formmatedReason}`);
         } catch (error){
             console.log(error);

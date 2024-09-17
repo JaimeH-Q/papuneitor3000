@@ -1,13 +1,17 @@
 const { Events } = require('discord.js');
+const userInfoLib = require("../my-modules/userInfo/userinfo.js");
 
 module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction){
 		if (interaction.isChatInputCommand()){
-
 			const command = interaction.client.commands.get(interaction.commandName);
 			if (!command) {
 				console.error(`No se encontró el comando ${interaction.commandName}.`);
+				return;
+			}
+			if(!await userInfoLib.registeredUser(interaction.user) && interaction.commandName != "verify"){
+				await interaction.reply({content: 'No estás verificado en el servidor. No puedes hacer esto.', ephemeral: true});
 				return;
 			}
 			

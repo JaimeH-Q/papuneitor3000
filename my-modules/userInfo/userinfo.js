@@ -15,16 +15,18 @@ function readFile(){
 
 async function writeUserData(userObject){
     let userData = await readFile();
-    userData = await JSON.parse(userData);
+    userData = JSON.parse(userData);
 
-    const username = Object.keys(userObject)[0];
-    userData[username] = userObject[username];
+    // Iterar sobre todas las claves del userObject y agregar/actualizar en userData
+    for (const [key, value] of Object.entries(userObject)) {
+        userData[key] = value;
+    }
 
-    userData = await JSON.stringify(userData, null, 2);
-    const response = await fs.writeFile('userData.json', userData, err => {
-        if(err) throw err;
-    })
-    return response;
+    // Convertir de nuevo a JSON y escribir en el archivo
+    const updatedData = JSON.stringify(userData, null, 2);
+    return await fs.writeFile('userData.json', updatedData, err => {
+        if (err) throw err;
+    });
 }
 
 
@@ -50,16 +52,17 @@ async function firstTimeDataSetup(user_object){
     }
 }
 
-async function addVerificationCode(user_object, code){
-    let allUserData = readFile();
-    allUserData = JSON.parse(userData);
-    if(!allUserData || !allUserData[user_object.name]){
-        firstTimeDataSetup(user_object);
+async function registeredUser(user){
+    if(await getUserData(user.username)){
+        return true;
     }
-
-    userData = allUserData[user_object.name];
-    userData.code = code;
-    
+    return false;
 }
 
-module.exports = { writeUserData, readFile, firstTimeDataSetup }
+async function getUserData(username){
+    let allUserData = readFile();
+    allUserData = JSON.parse(allUserData);
+    return allUserData[username];
+}
+
+module.exports = { writeUserData, readFile, firstTimeDataSetup, registeredUser }

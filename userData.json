@@ -1,13 +1,192 @@
 {
-  "jaim3_": {
+  "skyy__101": {
     "discord": {
-      "id": "396514978087305220",
-      "code": "qZmKX"
+      "id": "1074109204857638933",
+      "code": "eKEFX"
+    },
+    "moderationStats": {
+      "moderationPoints": 0,
+      "warns": 0,
+      "mutes": 12,
+      "kicks": 0,
+      "bans": 0
+    },
+    "history": {
+      "bans": [],
+      "kicks": [],
+      "mutes": [
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": null,
+          "time": null
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": "tonto",
+          "time": null
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": "awdaw",
+          "time": null
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": "Tonto",
+          "time": "1d"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": "Insultos",
+          "time": "15m"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": null,
+          "time": "30m"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": "Sin motivo",
+          "time": "30m"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": "Sin motivo",
+          "time": "30m"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": "Sin motivo",
+          "time": "1m"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": "Insultos fuertes",
+          "time": null
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "Jaime",
+          "reason": "Pasarse de pendejo",
+          "time": "1w"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": "༻𝙲 𝚄 𝙴 𝚁 𝚅 𝙾༺",
+          "reason": "Prueba N°1",
+          "time": "5m"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": {
+            "id": "396514978087305220",
+            "bot": false,
+            "system": false,
+            "flags": 128,
+            "username": "jaim3_",
+            "globalName": "Jaime",
+            "discriminator": "0",
+            "avatar": "00d8b88dcade20db969010da5d4eb47e",
+            "avatarDecoration": null,
+            "avatarDecorationData": null,
+            "createdTimestamp": 1514606937668,
+            "defaultAvatarURL": "https://cdn.discordapp.com/embed/avatars/2.png",
+            "tag": "jaim3_",
+            "avatarURL": "https://cdn.discordapp.com/avatars/396514978087305220/00d8b88dcade20db969010da5d4eb47e.webp",
+            "displayAvatarURL": "https://cdn.discordapp.com/avatars/396514978087305220/00d8b88dcade20db969010da5d4eb47e.webp"
+          },
+          "reason": "Sin motivo",
+          "time": "3h 30m"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": {
+            "id": "396514978087305220",
+            "bot": false,
+            "system": false,
+            "flags": 128,
+            "username": "jaim3_",
+            "globalName": "Jaime",
+            "discriminator": "0",
+            "avatar": "00d8b88dcade20db969010da5d4eb47e",
+            "avatarDecoration": null,
+            "avatarDecorationData": null,
+            "createdTimestamp": 1514606937668,
+            "defaultAvatarURL": "https://cdn.discordapp.com/embed/avatars/2.png",
+            "tag": "jaim3_",
+            "avatarURL": "https://cdn.discordapp.com/avatars/396514978087305220/00d8b88dcade20db969010da5d4eb47e.webp",
+            "displayAvatarURL": "https://cdn.discordapp.com/avatars/396514978087305220/00d8b88dcade20db969010da5d4eb47e.webp"
+          },
+          "reason": "Sin motivo",
+          "time": "6h 25m"
+        },
+        {
+          "date": "17/8/2024",
+          "staff": {
+            "id": "396514978087305220",
+            "bot": false,
+            "system": false,
+            "flags": 128,
+            "username": "jaim3_",
+            "globalName": "Jaime",
+            "discriminator": "0",
+            "avatar": "00d8b88dcade20db969010da5d4eb47e",
+            "avatarDecoration": null,
+            "avatarDecorationData": null,
+            "createdTimestamp": 1514606937668,
+            "defaultAvatarURL": "https://cdn.discordapp.com/embed/avatars/2.png",
+            "tag": "jaim3_",
+            "avatarURL": "https://cdn.discordapp.com/avatars/396514978087305220/00d8b88dcade20db969010da5d4eb47e.webp",
+            "displayAvatarURL": "https://cdn.discordapp.com/avatars/396514978087305220/00d8b88dcade20db969010da5d4eb47e.webp"
+          },
+          "reason": "Sin motivo",
+          "time": "1w"
+        }
+      ],
+      "warns": []
+    },
+    "minecraft": {}
+  },
+  "cuervox67": {
+    "discord": {
+      "id": "850083905959755857",
+      "code": "kKxQJ"
     },
     "moderationStats": {
       "moderationPoints": 0,
       "warns": 0,
       "mutes": 0,
+      "kicks": 0,
+      "bans": 0
+    },
+    "history": {
+      "bans": [],
+      "kicks": [],
+      "mutes": [],
+      "warns": []
+    },
+    "minecraft": {}
+  },
+  "jaim3_": {
+    "discord": {
+      "id": "396514978087305220",
+      "code": "VHZiT"
+    },
+    "moderationStats": {
+      "moderationPoints": 0,
+      "warns": 0,
+      "mutes": 1,
       "kicks": 0,
       "bans": 0
     },

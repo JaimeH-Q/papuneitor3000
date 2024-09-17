@@ -15,8 +15,11 @@ module.exports = {
         const userName = interaction.user.username;
 
         if (interaction.member.roles.cache.has(userRoleId)){
-            await interaction.reply({content: 'Ya estás registrado. No es necesario que uses este comando de nuevo.', ephemeral: true});
-            return;
+            if(await userinfolib.registeredUser(interaction.user)){
+                await interaction.reply({content: 'Ya estás registrado. No es necesario que uses este comando de nuevo.', ephemeral: true});
+                return;
+            } 
+            interaction.member.roles.cache.remove(userRoleId);
         }
         
         if (input_code != undefined){
