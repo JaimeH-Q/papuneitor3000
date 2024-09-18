@@ -3,6 +3,9 @@ const { parse } = require('path');
 const userinfolib = require('../userInfo/userinfo.js');
 
 async function addPunishment(username, sanction, reason, moderator, time){
+    if(moderator.id){
+        moderator = moderator.globalName;
+    }
     let userinfo_file = await userinfolib.readFile();
     userinfo_file = JSON.parse(userinfo_file);
     let userinfo_sanctionNumber = userinfo_file[moderator.username]['moderationStats'][sanction];
