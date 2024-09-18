@@ -5,6 +5,6 @@ module.exports = {
 	once: true,
 	execute(client) {
 		console.log(`Armado y preparado! ${client.user.tag}`);
-		client.user.setPresence({ activities: [{ name: `play.arkeonmc.net`, type: ActivityType.Playing, state:"1.21+"}], status: 'online' });
+		client.user.setPresence({ activities: [{ name: `play.arkeonmc.net`, type: ActivityType.Playing}], status: 'online' });
 	},
 };

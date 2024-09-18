@@ -9,6 +9,8 @@ function getModerationEmbed(type, moderator, user, reason, time){
             return getWarnEmbed(moderator, user, reason, time);
         case "mute":
             return getMuteEmbed(moderator, user, reason, time);
+        case "kick":
+            return getKickEmbed(moderator, user, reason)
     }
 
     return template[type];
@@ -35,6 +37,16 @@ function getMuteEmbed(moderator, user, reason, time){
         .setColor(0xf5a856)
         .setFooter({ text: "Moderador: "+moderator.displayName, iconURL: moderator.avatarURL()})
         .setTitle(":mute: Usuario muteado")
+        .addFields(fields)
+}
+
+
+function getKickEmbed(moderator, user, reason){
+    fields = [{ name: 'Usuario', value: `<@${user.id}>`, inline: true },{name: 'Motivo', value: reason, inline: true }];
+    return new EmbedBuilder()
+        .setColor(0xf5a856)
+        .setFooter({ text: "Moderador: "+moderator.displayName, iconURL: moderator.avatarURL()})
+        .setTitle(":door: Usuario expulsado")
         .addFields(fields)
 }
 

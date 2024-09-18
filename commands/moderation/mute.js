@@ -7,7 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('mute')
 		.setDescription('Silencia a un usuario')
-        .setDefaultMemberPermissions(PermissionsBitField.Flags.MuteMembers)
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ModerateMembers)
 		.addUserOption(option =>
 			option.setName('usuario')
 				.setDescription('El usuario a silenciar')
@@ -44,8 +44,8 @@ module.exports = {
 
 
 
-        if (!interaction.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
-            console.log(`${interaction.user.name} intentó usar WARN!`);
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.ModerateMembers)) {
+            console.log(`${interaction.user.name} intentó usar MUTE!`);
             return;
         }
 

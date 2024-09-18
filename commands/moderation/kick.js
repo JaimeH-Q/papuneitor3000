@@ -1,5 +1,8 @@
 const { SlashCommandBuilder, PermissionsBitField, ButtonBuilder, ActionRowBuilder, ButtonStyle, formatEmoji } = require('discord.js');
 const moderationLib = require('../../my-modules/moderationlib/moderationLib.js');
+const embedUtils = require('../../my-modules/messageUtils/embedUtils.js');
+const userInfoLib = require('../../my-modules/userInfo/userinfo.js');
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -17,10 +20,12 @@ module.exports = {
         
 	async execute(interaction) {
 		const userId = interaction.options.getUser('usuario', true);
-        const reason = interaction.options.getString('motivo', false);
+        let reason = interaction.options.getString('motivo', false);
         let formmatedReason = '`(Motivo: ' + reason + ')`';
+        const moderator = interaction.user;
         const moderatorUsername = interaction.user.displayName;
         if (!reason){
+            reason = "Sin motivo"
             formmatedReason = "`Sin motivo`";
         }
 
@@ -32,6 +37,24 @@ module.exports = {
 
         if (userId == interaction.user){
             interaction.reply({content: `No puedes expulsarte a ti mismo ${interaction.user}!`, ephemeral: true});
+            return;
+        }
+
+        if (userId.id == 1285038447295463476){
+            interaction.reply({content: `No... creo que estás olvidando quién manda por aquí.`, ephemeral: true});
+            return;
+        }
+
+        if(!await userInfoLib.registeredUser(userId)){
+            interaction.reply({content: `Todavía no tengo registros de ${userId}. Si no está verificado, expúlsalo manualmente.`, ephemeral: true});
+            return;
+        }
+
+        const targetMember = interaction.guild.members.cache.get(userId.id);
+        const targetHasAdminPermission = targetMember.permissions.has(PermissionsBitField.Flags.Administrator);
+
+        if(targetHasAdminPermission){
+            interaction.reply({content: `No puedes expulsar a **${targetMember.user}**. Es un administrador del servidor.`, ephemeral: true});  
             return;
         }
 
@@ -49,24 +72,18 @@ module.exports = {
         }
 
         try {
-            await moderationLib.addPunishment(userId.username, 'kicks');
+            await moderationLib.addPunishment(userId.username, 'kicks', reason, moderator, null);
             await userId.send(`Fuiste expulsado del servidor! ${formmatedReason}`);
             const kickResult = await interaction.guild.members.kick(userId);
         } catch (error){
-            console.log(error);
             if (error.code == 50013){
                 interaction.editReply({content: `No puedo kickear a ${userId}! Tiene un rol más alto que el mío.`});
                 return;
             }
+            console.log(error);
         }
 
-        if (reason == null){
-            interaction.deleteReply();
-            interaction.channel.send({content: `${userId} fue explulsado por **${moderatorUsername}**.`, components: []});
-            return;
-        }
-        interaction.deleteReply();
-        interaction.channel.send({content: `${userId} fue explulsado por **${moderatorUsername}** ${formmatedReason}`});
+        await interaction.channel.send({embeds: [embedUtils.getModerationEmbed("kick", moderator, userId, reason, null)]});
     }
 }
 
