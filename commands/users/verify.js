@@ -21,6 +21,13 @@ module.exports = {
             } 
             interaction.member.roles.cache.remove(userRoleId);
         }
+
+        if (userinfolib.registeredUser(interaction.user) && !interaction.member.roles.cache.has(userRoleId)){
+            await interaction.reply({content: 'Ya estabas registrado. Toda tu información sigue intacta.', ephemeral: true});
+            await interaction.member.roles.add(userRoleId);
+            return;
+
+        }
         
         if (input_code != undefined){
             let allUserInfo = await userinfolib.readFile();
