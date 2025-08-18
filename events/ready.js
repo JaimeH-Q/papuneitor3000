@@ -3,8 +3,8 @@ const { WebcastPushConnection } = require('tiktok-live-connector');
 
 
 const NOMBRE_MATI = "matiasvi123"; // usuario de kick
-const NOMBRE_FER = "eldruum"
-const CHANNEL_ID = "1401725700620292156"; // canal donde avisar
+const NOMBRE_FER = "imferpe"
+const CHANNEL_ID = "1407132833763426385"; // canal donde avisar
 
 let matiLive = false; // para no spamear
 let ferLive = false;
@@ -17,10 +17,10 @@ async function checkTikTokLive() {
 		
         conn.connect().then(state => {
             conn.disconnect();
-			console.log("fer está en vivo")
+			// console.log("fer está en vivo")
             resolve(true);
         }).catch(err => {
-			console.log("fer no está en vivo")
+			// console.log("fer no está en vivo")
             resolve(false);
         });
     });
@@ -79,19 +79,22 @@ module.exports = {
 				matiLive = true;
 				channel.send(`🔴 ¡**${NOMBRE_MATI}** está en vivo en Kick! https://kick.com/${NOMBRE_MATI} @here`);
 				client.user.setPresence({ activities: [{ name: `kick.com/matiasvi123`, type: ActivityType.Watching}], status: 'online' });
-			} else if (!kickLive) {
-				matiLive = false;
-			}
+			 } else if (!kickLive && matiLive) {
+                matiLive = false;
+                // Solo cambiar presencia si el otro no está en vivo
+                if (!ferLive) pickupRandomPresence(client);
+            }
 
 			if (tiktokLive && !ferLive) {
 				ferLive = true;
 				channel.send(`🔴 ¡**${NOMBRE_FER}** está en vivo en TikTok! https://www.tiktok.com/@${NOMBRE_FER} @here`);
 				client.user.setPresence({ activities: [{ name: `tiktok.com/@imferpe`, type: ActivityType.Watching}], status: 'online' });
-			} else if (!tiktokLive) {
-				ferLive = false;
-			
-			}
-		}, 5000);
+			} else if (!tiktokLive && ferLive) {
+                ferLive = false;
+                // Solo cambiar presencia si el otro no está en vivo
+                if (!matiLive) pickupRandomPresence(client);
+            }
+		}, 60000);
 
 		},
 };
