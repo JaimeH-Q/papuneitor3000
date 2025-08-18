@@ -1,68 +1,68 @@
-const fs = require('fs');
+const { Console } = require('console');
+const fs = require('fs').promises;
 const { parse } = require('path');
+const { allowedNodeEnvironmentFlags } = require('process');
 
-function readFile(){
-    const allUserData = fs.readFileSync('userData.json', 'utf8', (err, data) => {
-        if (err){
-            console.log(err);
-            return;
-        }
-        return data;
-    })
-    return allUserData;
+
+const path = 'userData.json';
+async function readFile() {
+    try {
+        return await fs.readFile(path, 'utf8');
+    } catch (err) {
+        if (err.code === 'ENOENT') return '{}'; // Si el archivo no existe, devuelve objeto vacío
+        throw err;
+    }
 }
 
-
-async function writeUserData(userObject){
+async function writeUserData(userObject) {
     let userData = await readFile();
     userData = JSON.parse(userData);
 
-    // Iterar sobre todas las claves del userObject y agregar/actualizar en userData
+    // Agregar o actualizar datos
     for (const [key, value] of Object.entries(userObject)) {
         userData[key] = value;
     }
 
-    // Convertir de nuevo a JSON y escribir en el archivo
     const updatedData = JSON.stringify(userData, null, 2);
-    return await fs.writeFile('userData.json', updatedData, err => {
-        if (err) throw err;
-    });
+    await fs.writeFile(path, updatedData);
 }
 
-
-function addModerationPoints(user){
-    let userData = readFile();
+async function addModerationPoints(user) {
+    let userData = await readFile();
     userData = JSON.parse(userData);
 
     console.log(userData);
+    // Aquí puedes agregar puntos, por ejemplo:
+    if (!userData[user.username]) userData[user.username] = {};
+    userData[user.username].points = (userData[user.username].points || 0) + 1;
+
+    await writeUserData(userData);
 }
 
-
-async function firstTimeDataSetup(user_object){
-    let userData = readFile();
-    userData = JSON.parse(userData);
-
-    const initial_embed = {
-        [user_object.name] : {
-            'discord' : {
-                'id' : [user_object.id],
-                'code': ""
-            }
-        }
-    }
+async function registeredUser(user) {
+    const allUserData = await getUserData(user.username);
+    if (allUserData == undefined) return false;
+    return allUserData?.discord?.registered || false;
 }
 
-async function registeredUser(user){
-    if(await getUserData(user.username)){
-        return true;
-    }
-    return false;
+async function registerUser(user) {
+    const allData = await getUserData(user.username) || {};
+    if (!allData.discord) allData.discord = {};
+    allData.discord.registered = true;
+    await writeUserData({ [user.username]: allData });
 }
 
-async function getUserData(username){
-    let allUserData = readFile();
+async function getUserData(username) {
+    let allUserData = await readFile();
     allUserData = JSON.parse(allUserData);
     return allUserData[username];
 }
 
-module.exports = { writeUserData, readFile, firstTimeDataSetup, registeredUser }
+module.exports = {
+    readFile,
+    writeUserData,
+    addModerationPoints,
+    registerUser,
+    registeredUser,
+    getUserData
+};

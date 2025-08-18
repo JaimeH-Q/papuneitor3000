@@ -10,7 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "discord.js": "^14.16.2"
+    "discord.js": "^14.16.2",
+    "tiktok-live-connector": "^2.0.7-beta1"
   },
   "devDependencies": {
     "eslint": "^9.10.0"

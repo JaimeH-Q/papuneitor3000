@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const userinfolib = require('../../my-modules/userInfo/userinfo.js');
-const userRoleId = '1284999851267985491';
+const userRoleId = '1401721258193850508';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,10 +19,10 @@ module.exports = {
                 await interaction.reply({content: 'Ya estás registrado. No es necesario que uses este comando de nuevo.', ephemeral: true});
                 return;
             } 
-            interaction.member.roles.cache.remove(userRoleId);
+            interaction.member.roles.remove(userRoleId);
         }
 
-        if (userinfolib.registeredUser(interaction.user) && !interaction.member.roles.cache.has(userRoleId)){
+        if (userinfolib.registeredUser(interaction.user) == true && !interaction.member.roles.cache.has(userRoleId)){
             await interaction.reply({content: 'Ya estabas registrado. Toda tu información sigue intacta.', ephemeral: true});
             await interaction.member.roles.add(userRoleId);
             return;
@@ -35,6 +35,8 @@ module.exports = {
             if (input_code == allUserInfo[userName].discord.code){
                 await interaction.reply({content: 'Excelente. ¡Bienvenido al servidor!', ephemeral: true});
                 await interaction.member.roles.add(userRoleId);
+                await userinfolib.registerUser(interaction.user);
+                
                 return;
             }
 
@@ -102,25 +104,9 @@ async function firstTimeSetup(interaction_user, code){
         [interaction_user.username] : {
             'discord':{
                 'id': interaction_user.id,
-                'code': code
-            },
-            'moderationStats':{
-                'moderationPoints': 0,
-                'warns': 0,
-                'mutes': 0,
-                'kicks': 0,
-                'bans': 0,
-            },
-            'history':{
-                'bans': [],
-                'kicks': [],
-                'mutes': [],
-                'warns': []
-            },
-            'minecraft':{
-                
+                'code': code,
+                'registered': false 
             }
-
         }
     }
 

@@ -3,8 +3,8 @@ const { Events, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discor
 module.exports = {
     name: Events.MessageCreate,
     async execute(message) {
-        if(message.content.includes("<@1285038447295463476>")){
-            if (message.content == "<@1285038447295463476>"){
+        if(message.content.includes("<@1402735495196315678>")){
+            if (message.content == "<@1402735495196315678>"){
                 await YouPingedMe("only", message);
                 return
             }
@@ -21,7 +21,7 @@ module.exports = {
 
 async function YouPingedMe(mode, msg){
     if (mode == "only"){
-        return msg.channel.send("Hola " + msg.author.displayName + ", ¿en que puedo ayudarte?");
+        return msg.channel.send("Hola " + msg.author.displayName + ", que querés?");
     }
     return msg.channel.send("... 👀");
 }
@@ -31,8 +31,11 @@ async function parseCommand(message){
     const channel = message.channel;
     const author = message.author;
     switch (content){
-        case "ip":
-            channel.send("La ip es 1.21")
+        case "kick":
+            channel.send("<:kick:1402749765199859773> https://kick.com/matiasvi123");
+        case "redes":
+            channel.send("https://www.instagram.com/matiasvi123/ \n https://www.tiktok.com/@matiasvi123?lang=es \n https://www.youtube.com/@matiasvi123");
+
 
     }
 

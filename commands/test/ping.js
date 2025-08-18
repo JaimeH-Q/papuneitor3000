@@ -6,6 +6,6 @@ module.exports = {
 		.setName('ping')
 		.setDescription('Comprueba el estado del bot'),
 	async execute(interaction) {
-		await interaction.reply('Aquí estoy, ' + interaction.member.displayName + '.');
+		await interaction.reply('Armado y preparado ' + interaction.member.displayName + ' :v');
 	},
 };
