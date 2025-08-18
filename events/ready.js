@@ -47,10 +47,10 @@ module.exports = {
 	once: true,
 	execute(client) {
 		console.log(`Armado y preparado! ${client.user.tag}`);
-		client.user.setPresence({ activities: [{ name: `kick.com/matiasvi123`, type: ActivityType.Watching}], status: 'online' });
+		client.user.setPresence({ activities: [{ name: `League of legends`, type: ActivityType.Playing}], status: 'online' });
+
 
 		console.log("Iniciando intérvalo :v")
-
 		setInterval(async () => {
 			const kickLive = await checkKickLive();
 			const tiktokLive = await checkTikTokLive();
@@ -59,15 +59,20 @@ module.exports = {
 			if (kickLive && !matiLive) {
 				matiLive = true;
 				channel.send(`🔴 ¡**${NOMBRE_MATI}** está en vivo en Kick! https://kick.com/${NOMBRE_MATI} @here`);
+				client.user.setPresence({ activities: [{ name: `kick.com/matiasvi123`, type: ActivityType.Watching}], status: 'online' });
 			} else if (!kickLive) {
 				matiLive = false;
+				client.user.setPresence({ activities: [{ name: `Valorant`, type: ActivityType.Playing}], status: 'online' });
 			}
 
 			if (tiktokLive && !ferLive) {
 				ferLive = true;
 				channel.send(`🔴 ¡**${NOMBRE_FER}** está en vivo en TikTok! https://www.tiktok.com/@${NOMBRE_FER} @here`);
+				client.user.setPresence({ activities: [{ name: `tiktok.com/@imferpe`, type: ActivityType.Watching}], status: 'online' });
 			} else if (!tiktokLive) {
 				ferLive = false;
+				client.user.setPresence({ activities: [{ name: `League of legends`, type: ActivityType.Playing}], status: 'online' });
+			
 			}
 		}, 5000);
 
