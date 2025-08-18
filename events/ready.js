@@ -66,7 +66,7 @@ module.exports = {
 	once: true,
 	execute(client) {
 		console.log(`Armado y preparado! ${client.user.tag}`);
-		pickupRandomPresence();
+		pickupRandomPresence(client);
 
 
 		console.log("Iniciando intérvalo :v")
