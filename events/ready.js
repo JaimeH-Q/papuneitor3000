@@ -14,11 +14,13 @@ async function checkTikTokLive() {
 		// console.log("Chequeando tiktok de fer...")
     return new Promise(resolve => {
         const conn = new WebcastPushConnection(NOMBRE_FER);
-
+		
         conn.connect().then(state => {
             conn.disconnect();
+			console.log("fer está en vivo")
             resolve(true);
         }).catch(err => {
+			console.log("fer no está en vivo")
             resolve(false);
         });
     });
@@ -40,6 +42,23 @@ async function checkKickLive() {
     }
 }
 
+const juegos = [
+    "League of Legends",
+    "Minecraft",
+    "Valorant",
+];
+
+function getRandomJuego() {
+    return juegos[Math.floor(Math.random() * juegos.length)];
+}
+
+async function pickupRandomPresence(client) {
+    client.user.setPresence({ 
+        activities: [{ name: getRandomJuego(), type: ActivityType.Playing }],
+        status: 'online' 
+    });
+}
+
 
 
 module.exports = {
@@ -47,7 +66,7 @@ module.exports = {
 	once: true,
 	execute(client) {
 		console.log(`Armado y preparado! ${client.user.tag}`);
-		client.user.setPresence({ activities: [{ name: `League of legends`, type: ActivityType.Playing}], status: 'online' });
+		pickupRandomPresence();
 
 
 		console.log("Iniciando intérvalo :v")
@@ -62,7 +81,6 @@ module.exports = {
 				client.user.setPresence({ activities: [{ name: `kick.com/matiasvi123`, type: ActivityType.Watching}], status: 'online' });
 			} else if (!kickLive) {
 				matiLive = false;
-				client.user.setPresence({ activities: [{ name: `Valorant`, type: ActivityType.Playing}], status: 'online' });
 			}
 
 			if (tiktokLive && !ferLive) {
@@ -71,7 +89,6 @@ module.exports = {
 				client.user.setPresence({ activities: [{ name: `tiktok.com/@imferpe`, type: ActivityType.Watching}], status: 'online' });
 			} else if (!tiktokLive) {
 				ferLive = false;
-				client.user.setPresence({ activities: [{ name: `League of legends`, type: ActivityType.Playing}], status: 'online' });
 			
 			}
 		}, 5000);
