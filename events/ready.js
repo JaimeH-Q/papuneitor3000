@@ -3,7 +3,7 @@ const { WebcastPushConnection } = require('tiktok-live-connector');
 
 
 const NOMBRE_MATI = "matiasvi123"; // usuario de kick
-const NOMBRE_FER = "volcano"
+const NOMBRE_FER = "eldruum"
 const CHANNEL_ID = "1401725700620292156"; // canal donde avisar
 
 let matiLive = false; // para no spamear
