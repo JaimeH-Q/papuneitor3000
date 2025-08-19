@@ -17,10 +17,10 @@ async function checkTikTokLive() {
 		
         conn.connect().then(state => {
             conn.disconnect();
-			console.log("fer está en vivo")
+			// console.log("fer está en vivo")
             resolve(true);
         }).catch(err => {
-			console.log("fer no está en vivo")
+			// console.log("fer no está en vivo")
             resolve(false);
         });
     });
