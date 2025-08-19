@@ -83,7 +83,7 @@ module.exports = {
                 matiLive = false;
                 // Solo cambiar presencia si el otro no está en vivo
                 if (!ferLive) pickupRandomPresence(client);
-            }g
+            }
 
 			if (tiktokLive && !ferLive) {
 				ferLive = true;
