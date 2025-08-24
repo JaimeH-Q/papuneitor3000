@@ -32,6 +32,10 @@ module.exports = {
         if (input_code != undefined){
             let allUserInfo = await userinfolib.readFile();
             allUserInfo = JSON.parse(allUserInfo);
+            if(allUserInfo[userName] == undefined){
+                await interaction.reply({content: 'Parece que no generaste primero tu código secreto. Primero ejecuta /verify sin nada más!', ephemeral: true})
+                return;
+            }
             if (input_code == allUserInfo[userName].discord.code){
                 await interaction.reply({content: 'Excelente. ¡Bienvenido al servidor!', ephemeral: true});
                 await interaction.member.roles.add(userRoleId);
