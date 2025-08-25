@@ -14,13 +14,12 @@ async function checkTikTokLive() {
 
     return new Promise(resolve => {
         console.log(tiktok_apikey);
-        SignConfig.apiKey = tiktok_apikey;
         const conn = new TikTokLiveConnection(NOMBRE_FER);
         console.log("Probando a fer...")
 
         conn.connect().then(state => {
             console.log("Se detectó a fer en vivo :V")
-            console.log("Room info owner: " + state.roomInfo?.owner + " streamid: " + state.roomInfo?.streamId);
+            console.log(state);
             // ⚠ Verificación adicional: si no hay streamId, no está en vivo
             if (state.roomInfo?.owner && state.roomInfo?.streamId) {
                 conn.disconnect();
