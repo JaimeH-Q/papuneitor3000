@@ -13,7 +13,7 @@ let ferOfflineFails = 0; // contador de intentos fallidos
 async function checkTikTokLive() {
 
     return new Promise(resolve => {
-        console.log(tiktok_apikey);
+        SignConfig.apiKey = tiktok_apikey;
         const conn = new TikTokLiveConnection(NOMBRE_FER);
         console.log("Probando a fer...")
 
