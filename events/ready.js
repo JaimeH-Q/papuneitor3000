@@ -12,6 +12,7 @@ let ferOfflineFails = 0; // contador de intentos fallidos
 async function checkTikTokLive() {
     return new Promise(resolve => {
         const conn = new WebcastPushConnection(NOMBRE_FER);
+        console.log("Probando a fer...")
 
         conn.connect().then(state => {
             console.log("Se detectó a fer en vivo :V")
@@ -25,6 +26,8 @@ async function checkTikTokLive() {
                 resolve(false);
             }
         }).catch(err => {
+            console.log("Falló: " + err)
+
             resolve(false);
         });
     });
