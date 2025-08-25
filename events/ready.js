@@ -15,20 +15,16 @@ async function checkTikTokLive() {
     return new Promise(resolve => {
         SignConfig.apiKey = tiktok_apikey;
         const conn = new TikTokLiveConnection(NOMBRE_FER);
-        console.log("Probando a fer...")
 
         conn.connect().then(state => {
-            console.log("Se detectó a fer en vivo :V")
-            console.log(state);
-            conn.disconnect();
-            resolve(true);
-            // // ⚠ Verificación adicional: si no hay streamId, no está en vivo
-            // if (state.roomInfo?.owner && state.roomInfo?.streamId) {
-
-            // } else {
-            //     conn.disconnect();
-            //     resolve(false);
-            // }
+            // ⚠ Verificación adicional: si no hay streamId, no está en vivo
+            if (state.isConnected) {
+                conn.disconnect();
+                resolve(true);
+            } else {
+                conn.disconnect();
+                resolve(false);
+            }
         }).catch(err => {
             console.log("Falló: " + err)
             resolve(false);
