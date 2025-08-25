@@ -1,6 +1,6 @@
 const { Events, ActivityType } = require('discord.js');
 const { WebcastPushConnection } = require('tiktok-live-connector');
-const { tiktok_apikey } = require("./config.json");
+const { tiktok_apikey } = require("../config.json");
 
 const NOMBRE_MATI = "matiasvi123"; 
 const NOMBRE_FER = "imferpe05"
