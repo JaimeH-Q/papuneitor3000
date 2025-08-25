@@ -1,5 +1,5 @@
 const { Events, ActivityType } = require('discord.js');
-const { WebcastPushConnection } = require('tiktok-live-connector');
+const { SignConfig, TikTokLiveConnection  } = require('tiktok-live-connector');
 const { tiktok_apikey } = require("../config.json");
 
 const NOMBRE_MATI = "matiasvi123"; 
@@ -11,12 +11,11 @@ let ferLive = false;
 let ferOfflineFails = 0; // contador de intentos fallidos
 
 async function checkTikTokLive() {
+
     return new Promise(resolve => {
-        const conn = new WebcastPushConnection(NOMBRE_FER, {
-            requestOptions: {
-                apiKey: tiktok_apikey
-            }
-        });
+        console.log(tiktok_apikey);
+        SignConfig.apiKey = tiktok_apikey;
+        const conn = new TikTokLiveConnection(NOMBRE_FER);
         console.log("Probando a fer...")
 
         conn.connect().then(state => {
