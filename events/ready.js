@@ -14,6 +14,8 @@ async function checkTikTokLive() {
         const conn = new WebcastPushConnection(NOMBRE_FER);
 
         conn.connect().then(state => {
+            console.log("Se detectó a fer en vivo :V")
+            console.log("Room info owner: " + state.roomInfo?.owner + " streamid: " + state.roomInfo?.streamId);
             // ⚠ Verificación adicional: si no hay streamId, no está en vivo
             if (state.roomInfo?.owner && state.roomInfo?.streamId) {
                 conn.disconnect();
