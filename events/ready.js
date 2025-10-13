@@ -26,7 +26,6 @@ async function checkTikTokLive() {
                 resolve(false);
             }
         }).catch(err => {
-            console.log("Falló: " + err)
             resolve(false);
         });
     });
