@@ -86,25 +86,25 @@ module.exports = {
             }
 
             // --- TikTok con intentos ---
-            if (tiktokLive) {
-                ferOfflineFails = 0; // reseteamos intentos fallidos
-                if (!ferLive) {
-                    ferLive = true;
-                    channel.send(`🔴 ¡**${NOMBRE_FER}** está en vivo en TikTok! https://www.tiktok.com/@${NOMBRE_FER} @here`);
-                    client.user.setPresence({ activities: [{ name: `tiktok.com/@${NOMBRE_FER}`, type: ActivityType.Watching}], status: 'online' });
-                }
-            } else {
-                if (ferLive) {
-                    ferOfflineFails++;
-                    console.log(`Fer no detectado en TikTok, intento ${ferOfflineFails}/3`);
-                    if (ferOfflineFails >= 3) {
-                        ferLive = false;
-                        ferOfflineFails = 0;
-                        if (!matiLive) pickupRandomPresence(client);
-                        console.log("Fer marcado como offline después de 3 intentos fallidos.");
-                    }
-                }
-            }
+            // if (tiktokLive) {
+            //     ferOfflineFails = 0; // reseteamos intentos fallidos
+            //     if (!ferLive) {
+            //         ferLive = true;
+            //         channel.send(`🔴 ¡**${NOMBRE_FER}** está en vivo en TikTok! https://www.tiktok.com/@${NOMBRE_FER} @here`);
+            //         client.user.setPresence({ activities: [{ name: `tiktok.com/@${NOMBRE_FER}`, type: ActivityType.Watching}], status: 'online' });
+            //     }
+            // } else {
+            //     if (ferLive) {
+            //         ferOfflineFails++;
+            //         console.log(`Fer no detectado en TikTok, intento ${ferOfflineFails}/3`);
+            //         if (ferOfflineFails >= 3) {
+            //             ferLive = false;
+            //             ferOfflineFails = 0;
+            //             if (!matiLive) pickupRandomPresence(client);
+            //             console.log("Fer marcado como offline después de 3 intentos fallidos.");
+            //         }
+            //     }
+            // }
 
         }, 180000);
     },
