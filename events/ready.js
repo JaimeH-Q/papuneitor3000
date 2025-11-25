@@ -7,22 +7,50 @@ const CHANNEL_ID = "1407132833763426385";
 let matiLive = false; 
 // TikTok logic removed completely
 
-async function checkKickLive(timeout = 7000) {
+async function checkKickLive() {
     try {
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
-        const res = await fetch(`https://kick.com/api/v2/channels/${NOMBRE_MATI}`, { signal: controller.signal });
-        clearTimeout(id);
-        if (!res.ok) return false;
-        const data = await res.json();
-        console.log("Kick data:", JSON.stringify(data, null, 2));
-        return !!data.livestream;
-    } catch (err) {
-        if (err.name === 'AbortError') {
-            console.error('Timeout chequeando Kick');
-        } else {
-            console.error('Error chequeando Kick:', err);
+        // plain fetch without AbortController/signal per user's request
+        const res = await fetch(`https://kick.com/api/v2/channels/${NOMBRE_MATI}`);
+
+        if (!res.ok) {
+            const body = await res.text().catch(() => '<no body>');
+            console.error(`Kick API responded ${res.status}: ${String(body).slice(0,200)}`);
+            return false;
         }
+
+        const data = await res.json().catch(err => {
+            console.error('Failed parsing Kick JSON:', err);
+            return null;
+        });
+
+        if (!data) return false;
+
+        // Diagnostics
+        try {
+            if (data.livestream) {
+                console.log('Kick: livestream present; keys=', Object.keys(data.livestream));
+            } else {
+                console.log('Kick: no livestream field; top-level keys=', Object.keys(data));
+            }
+        } catch (e) {
+            console.log('Kick: response type:', typeof data);
+        }
+
+        // Robust live detection: check explicit is_live, id presence, or non-empty livestream object
+        const ls = data.livestream;
+        const live = Boolean(
+            ls && (
+                ls.is_live === true ||
+                ls.is_live === 'true' ||
+                (typeof ls.id !== 'undefined' && ls.id !== null) ||
+                (Object.keys(ls || {}).length > 0)
+            )
+        );
+
+        console.log('Kick: computed live=', live);
+        return live;
+    } catch (err) {
+        console.error('Error chequeando Kick:', err);
         return false;
     }
 }
@@ -78,6 +106,7 @@ module.exports = {
                 intervalRunning = false;
             }
 
-        }, 180000);
+        // }, 180000);
+        }, 20000); // 20 segundos para pruebas
     },
 };
