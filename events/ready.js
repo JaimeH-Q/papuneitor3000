@@ -1,46 +1,27 @@
 const { Events, ActivityType } = require('discord.js');
-const { SignConfig, TikTokLiveConnection  } = require('tiktok-live-connector');
-const { tiktok_apikey } = require("../config.json");
+// TikTok removed: no longer required
 
 const NOMBRE_MATI = "matiasvi123"; 
-const NOMBRE_FER = "imferpe05"
 const CHANNEL_ID = "1407132833763426385"; 
 
 let matiLive = false; 
-let ferLive = false;
-let ferOfflineFails = 0; // contador de intentos fallidos
+// TikTok logic removed completely
 
-async function checkTikTokLive() {
-
-    return new Promise(resolve => {
-        SignConfig.apiKey = tiktok_apikey;
-        const conn = new TikTokLiveConnection(NOMBRE_FER);
-
-        conn.connect().then(state => {
-            // ⚠ Verificación adicional: si no hay streamId, no está en vivo
-            if (state.isConnected) {
-                conn.disconnect();
-                resolve(true);
-            } else {
-                conn.disconnect();
-                resolve(false);
-            }
-        }).catch(err => {
-            resolve(false);
-        });
-    });
-}
-
-async function checkKickLive() {
+async function checkKickLive(timeout = 7000) {
     try {
-        const res = await fetch(`https://kick.com/api/v2/channels/${NOMBRE_MATI}`);
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        const res = await fetch(`https://kick.com/api/v2/channels/${NOMBRE_MATI}`, { signal: controller.signal });
+        clearTimeout(id);
+        if (!res.ok) return false;
         const data = await res.json();
-        if (data.livestream) {
-            return true;
-        }
-        return false;
+        return !!data.livestream;
     } catch (err) {
-        console.error("Error chequeando Kick:", err);
+        if (err.name === 'AbortError') {
+            console.error('Timeout chequeando Kick');
+        } else {
+            console.error('Error chequeando Kick:', err);
+        }
         return false;
     }
 }
@@ -70,10 +51,13 @@ module.exports = {
         pickupRandomPresence(client);
 
         console.log("Iniciando intérvalo :v")
+        let intervalRunning = false;
         setInterval(async () => {
-            const kickLive = await checkKickLive();
-            const tiktokLive = await checkTikTokLive();
-            const channel = await client.channels.fetch(CHANNEL_ID);
+            if (intervalRunning) return;
+            intervalRunning = true;
+            try {
+                const kickLive = await checkKickLive();
+                const channel = await client.channels.fetch(CHANNEL_ID);
 
             // --- Kick ---
             if (kickLive && !matiLive) {
@@ -82,29 +66,16 @@ module.exports = {
                 client.user.setPresence({ activities: [{ name: `kick.com/${NOMBRE_MATI}`, type: ActivityType.Watching}], status: 'online' });
             } else if (!kickLive && matiLive) {
                 matiLive = false;
-                if (!ferLive) pickupRandomPresence(client);
+                pickupRandomPresence(client);
             }
 
-            // --- TikTok con intentos ---
-            // if (tiktokLive) {
-            //     ferOfflineFails = 0; // reseteamos intentos fallidos
-            //     if (!ferLive) {
-            //         ferLive = true;
-            //         channel.send(`🔴 ¡**${NOMBRE_FER}** está en vivo en TikTok! https://www.tiktok.com/@${NOMBRE_FER} @here`);
-            //         client.user.setPresence({ activities: [{ name: `tiktok.com/@${NOMBRE_FER}`, type: ActivityType.Watching}], status: 'online' });
-            //     }
-            // } else {
-            //     if (ferLive) {
-            //         ferOfflineFails++;
-            //         console.log(`Fer no detectado en TikTok, intento ${ferOfflineFails}/3`);
-            //         if (ferOfflineFails >= 3) {
-            //             ferLive = false;
-            //             ferOfflineFails = 0;
-            //             if (!matiLive) pickupRandomPresence(client);
-            //             console.log("Fer marcado como offline después de 3 intentos fallidos.");
-            //         }
-            //     }
-            // }
+            }
+            catch (err) {
+                console.error('Error en intervalo:', err);
+            }
+            finally {
+                intervalRunning = false;
+            }
 
         }, 180000);
     },
