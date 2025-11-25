@@ -9,8 +9,21 @@ let matiLive = false;
 
 async function checkKickLive() {
     try {
-        // plain fetch without AbortController/signal per user's request
-        const res = await fetch(`https://kick.com/api/v2/channels/${NOMBRE_MATI}`);
+        // Add browser-like headers so the request looks like it comes from a real browser
+        const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+            'Referer': `https://kick.com/${NOMBRE_MATI}`,
+            'Origin': 'https://kick.com',
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Dest': 'empty',
+            'Connection': 'keep-alive',
+            'DNT': '1'
+        };
+
+        const res = await fetch(`https://kick.com/api/v2/channels/${NOMBRE_MATI}`, { headers });
 
         if (!res.ok) {
             const body = await res.text().catch(() => '<no body>');
