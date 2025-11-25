@@ -1,5 +1,5 @@
 const { Events, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
-import { checkIfShouldParticipateInConversation } from '../my-modules/papuneitorIA.js';
+const { checkIfShouldParticipateInConversation } = require( '../my-modules/papuneitorIA.js');
 
 
 module.exports = {
