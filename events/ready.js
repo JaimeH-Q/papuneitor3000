@@ -119,7 +119,7 @@ module.exports = {
                 intervalRunning = false;
             }
 
-        // }, 180000);
-        }, 20000); // 20 segundos para pruebas
+        }, 180000);
+        // }, 20000); // 20 segundos para pruebas
     },
 };
