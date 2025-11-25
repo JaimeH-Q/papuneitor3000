@@ -1,6 +1,6 @@
 
 const { OpenAI } = require("openai");
-const { open_ai_apikey } = require("./config.json");
+const { open_ai_apikey } = require("../config.json");
 
 
 
