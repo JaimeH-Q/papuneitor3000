@@ -4,7 +4,7 @@ const { open_ai_apikey } = require("./config.json");
 
 
 
-export const openai = new OpenAI({
+const openai = new OpenAI({
     apiKey: open_ai_apikey
 });
 
@@ -12,7 +12,7 @@ export const openai = new OpenAI({
 /**
  * Llama a la IA y devuelve una respuesta simple.
  */
-export async function generateAIReply(userMessage) {
+async function generateAIReply(userMessage) {
     try {
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini", // barato, rápido y bueno
@@ -27,3 +27,8 @@ export async function generateAIReply(userMessage) {
         return "Error hablando con la IA 😵‍💫";
     }
 }
+
+module.exports = {
+    openai,
+    generateAIReply
+};
