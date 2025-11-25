@@ -27,7 +27,7 @@ async function checkKickLive() {
 
         if (!res.ok) {
             const body = await res.text().catch(() => '<no body>');
-            console.error(`Kick API responded ${res.status}: ${String(body).slice(0,200)}`);
+            // console.error(`Kick API responded ${res.status}: ${String(body).slice(0,200)}`);
             return false;
         }
 
@@ -100,7 +100,7 @@ module.exports = {
             try {
                 const kickLive = await checkKickLive();
                 const channel = await client.channels.fetch(CHANNEL_ID);
-                console.log(`Estado actual: Kick live: ${kickLive}, Mati live: ${matiLive}`);
+                // console.log(`Estado actual: Kick live: ${kickLive}, Mati live: ${matiLive}`);
             // --- Kick ---
             if (kickLive && !matiLive) {
                 matiLive = true;
