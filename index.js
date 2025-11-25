@@ -39,4 +39,10 @@ for (const file of eventFiles) {
 	}
 }
 
+
+// Inicializar la IA
+const { setClient } = require('./my-modules/papuneitorIA.js');
+setClient(client);
+
+
 client.login(token);

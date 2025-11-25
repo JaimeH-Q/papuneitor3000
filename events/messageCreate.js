@@ -1,4 +1,6 @@
 const { Events, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
+import { checkIfShouldParticipateInConversation } from '../my-modules/papuneitorIA.js';
+
 
 module.exports = {
     name: Events.MessageCreate,
@@ -9,11 +11,15 @@ module.exports = {
                 return
             }
             await YouPingedMe("includes", message);
+            return;
         }
         if(message.content.startsWith("!")){
             parseCommand(message);
             return;
         }
+        
+
+        checkIfShouldParticipateInConversation(message);
 
     },
 };
@@ -38,5 +44,5 @@ async function parseCommand(message){
 
 
     }
-
 }
+
