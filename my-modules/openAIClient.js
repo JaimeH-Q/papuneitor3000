@@ -1,4 +1,5 @@
-import OpenAI from "openai";
+
+const { OpenAI } = require("openai");
 const { open_ai_apikey } = require("./config.json");
 
 
