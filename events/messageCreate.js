@@ -7,14 +7,14 @@ module.exports = {
     async execute(message) {
         checkIfShouldParticipateInConversation(message);
 
-        if(message.content.includes("<@1402735495196315678>")){
-            if (message.content == "<@1402735495196315678>"){
-                await YouPingedMe("only", message);
-                return
-            }
-            await YouPingedMe("includes", message);
-            return;
-        }
+        // if(message.content.includes("<@1402735495196315678>")){
+        //     if (message.content == "<@1402735495196315678>"){
+        //         await YouPingedMe("only", message);
+        //         return
+        //     }
+        //     await YouPingedMe("includes", message);
+        //     return;
+        // }
         if(message.content.startsWith("!")){
             parseCommand(message);
             return;

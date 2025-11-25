@@ -52,7 +52,8 @@ function checkRandomParticipation(message) {
 }
 
 async function checkForMentionOrReply(message, botId) {
-    let mentioned = message.mentions.has(botId);
+    console.log("All mentions: " + message.mentions.users.map(u => u.id).join(", "));
+    let mentioned = message.content.includes("<@1402735495196315678>") || message.mentions.users.has(botId);
     console.log("Message mentions bot?", mentioned);
     if (!mentioned && message.reference) {
         try {
