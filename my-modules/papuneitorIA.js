@@ -9,7 +9,7 @@ const triggerWords = ["papuneitor", "papuneitor3000", "bot"];
 const { openai, generateAIReply  } = require('./openAIClient.js');
 
 
-export function setClient(discordClient){
+function setClient(discordClient){
     client = discordClient;
 }
 
@@ -39,7 +39,6 @@ async function checkIfShouldParticipateInConversation(message){
 
 
 }
-
 
 
 
@@ -96,3 +95,8 @@ async function handleReply(message) {
     });
 
 }
+
+module.exports = {
+    checkIfShouldParticipateInConversation,
+    setClient
+};
