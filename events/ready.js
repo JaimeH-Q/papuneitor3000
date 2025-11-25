@@ -58,7 +58,7 @@ module.exports = {
             try {
                 const kickLive = await checkKickLive();
                 const channel = await client.channels.fetch(CHANNEL_ID);
-
+                console.log(`Estado actual: Kick live: ${kickLive}, Mati live: ${matiLive}`);
             // --- Kick ---
             if (kickLive && !matiLive) {
                 matiLive = true;
