@@ -15,6 +15,7 @@ async function checkKickLive(timeout = 7000) {
         clearTimeout(id);
         if (!res.ok) return false;
         const data = await res.json();
+        console.log("Kick data:", JSON.stringify(data, null, 2));
         return !!data.livestream;
     } catch (err) {
         if (err.name === 'AbortError') {
