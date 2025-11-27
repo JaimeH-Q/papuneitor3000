@@ -5,7 +5,7 @@ const { checkIfShouldParticipateInConversation } = require( '../my-modules/papun
 module.exports = {
     name: Events.MessageCreate,
     async execute(message) {
-        checkIfShouldParticipateInConversation(message);
+        // checkIfShouldParticipateInConversation(message);
 
         // if(message.content.includes("<@1402735495196315678>")){
         //     if (message.content == "<@1402735495196315678>"){

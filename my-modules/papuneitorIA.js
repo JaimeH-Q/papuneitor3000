@@ -45,14 +45,16 @@ async function checkIfShouldParticipateInConversation(message){
 function checkRandomParticipation(message) {
     const randomChance = Math.random();
     console.log("Random chance value:", randomChance);
-    if (randomChance < 0.15) {
+    if (randomChance < 0.000) {
         console.log("Participating in conversation because of random chance.");
         handleReply(message);
     }
 }
 
 async function checkForMentionOrReply(message, botId) {
+    console.log("My id:", botId);       
     console.log("All mentions: " + message.mentions.users.map(u => u.id).join(", "));
+    console.log("Message has my id: "+ message.mentions.users.has(botId))            
     let mentioned = message.content.includes("<@1402735495196315678>") || message.mentions.users.has(botId);
     console.log("Message mentions bot?", mentioned);
     if (!mentioned && message.reference) {
@@ -70,7 +72,7 @@ async function checkForMentionOrReply(message, botId) {
 
     if (mentioned) {
         console.log("Participating in conversation because I was mentioned.");
-        // finish
+        handleReply(message);
     }
 }
 
