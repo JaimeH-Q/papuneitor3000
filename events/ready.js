@@ -27,7 +27,7 @@ async function checkKickLive() {
 
         if (!res.ok) {
             const body = await res.text().catch(() => '<no body>');
-            // console.error(`Kick API responded ${res.status}: ${String(body).slice(0,200)}`);
+            console.error(`Kick API responded ${res.status}: ${String(body).slice(0,200)}`);
             return false;
         }
 
