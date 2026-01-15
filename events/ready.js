@@ -1,4 +1,4 @@
-const { Events, ActivityType, MessageActivityType } = require('discord.js');
+const { Events, ActivityType, MessageActivityType, time, TimestampStyles } = require('discord.js');
 
 const { getSoloQInfoForName } = require("../my-modules/riotGamesLib")
 // TikTok removed: no longer required
@@ -208,6 +208,13 @@ async function getTopMessage(soloqData){
         }
     }
 
+    message += "\n"
+
+    const date = new Date(); // Current time
+    const relativeTime = time(date, TimestampStyles.RelativeTime); // e.g., "5 minutes ago"
+
+    message += "-# Última actualización: " + relativeTime
+
 
 
     return message;
@@ -215,6 +222,8 @@ async function getTopMessage(soloqData){
 
 
 let lastLolContent = null;
+
+const TOP_MESSAGE_ID = "1461461961702117476";
 
 async function updateLolTop(client){
     const lolContent = await getLolTopData();
@@ -230,13 +239,13 @@ async function updateLolTop(client){
     // Si cambió, actualizamos el cache
     lastLolContent = newContentString;
 
-    const message = await getTopMessage(lolContent);
+    const messageContent = await getTopMessage(lolContent);
 
     const channelId = "1461228635028586549";
     const channel = await client.channels.fetch(channelId);
-
-    await channel.bulkDelete(1);
-    await channel.send(message);
+    const prevMessage = await channel.messages.fetch(TOP_MESSAGE_ID);
+    await prevMessage.edit(messageContent);
+    //await channel.send(messageContent);
 
     console.log("Top actualizado.");
 }
