@@ -7,8 +7,9 @@ const NOMBRE_MATI = "matiasvi123";
 const CHANNEL_ID = "1407132833763426385"; 
 
 
-
-const PAPUS_DEL_LOL = ["LGL iJaimexARG#SDLG","LGL OneEyedKing#DEAD","LGLnachitomack#SDLG","LGL ImFerPe#SDLG","LGL MatiASvi#7557","IIIIIllIIIII#LAS"]
+// "IIIIIllIIIII#LAS"
+const PAPUS_DEL_LOL = ["LGL iJaimexARG#SDLG","LGL OneEyedKing#DEAD","LGLnachitomack#SDLG","LGL ImFerPe#SDLG","LGL MatiASvi#7557","TSTpredictionOP#Yorsh"
+    ,"OMG ÇrîmsønĄbbÿš#OMG"]
 
 let matiLive = false; 
 // TikTok logic removed completely
