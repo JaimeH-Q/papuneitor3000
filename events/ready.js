@@ -127,22 +127,38 @@ const TRANSLATE = {
     DIAMOND: "Diamante"
 };
 
+const RANK_ORDER = {
+    I: 1,
+    II: 2,
+    III: 3,
+    IV: 4
+};
+
 function sortData(data){
     return data.sort((a, b) => {
-        // Si alguno no tiene tier (por ejemplo cuando no juega soloq)
+        // Los que no juegan soloQ van al final
         if (!a.tier && !b.tier) return 0;
-        if (!a.tier) return 1;   // el que no tiene soloq va al final
+        if (!a.tier) return 1;
         if (!b.tier) return -1;
 
         const tierA = TIER_ORDER[a.tier];
         const tierB = TIER_ORDER[b.tier];
 
-        // Primero ordenar por tier
+        // 1) Ordenar por tier
         if (tierA !== tierB) {
-            return tierB - tierA; // más alto primero
+            return tierB - tierA; // tier más alto primero
         }
 
-        // Si están en el mismo tier, ordenar por LP
+        const rankA = RANK_ORDER[a.rank];
+        const rankB = RANK_ORDER[b.rank];
+
+        // 2) Dentro del mismo tier, ordenar por rank
+        // I es mejor que IV, así que menor número es mejor
+        if (rankA !== rankB) {
+            return rankA - rankB;
+        }
+
+        // 3) Dentro del mismo tier y rank, ordenar por LP
         return b.leaguePoints - a.leaguePoints;
     });
 }
