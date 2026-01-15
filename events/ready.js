@@ -1,8 +1,14 @@
-const { Events, ActivityType } = require('discord.js');
+const { Events, ActivityType, MessageActivityType } = require('discord.js');
+
+const { getSoloQInfoForName } = require("../my-modules/riotGamesLib")
 // TikTok removed: no longer required
 
 const NOMBRE_MATI = "matiasvi123"; 
 const CHANNEL_ID = "1407132833763426385"; 
+
+
+
+const PAPUS_DEL_LOL = ["LGL iJaimexARG#SDLG","LGL OneEyedKing#DEAD","LGLnachitomack#SDLG","LGL ImFerPe#SDLG","LGL MatiASvi#7557","IIIIIllIIIII#LAS"]
 
 let matiLive = false; 
 // TikTok logic removed completely
@@ -85,6 +91,140 @@ async function pickupRandomPresence(client) {
     });
 }
 
+async function getLolTopData(){
+    let data = [];
+    for(papu of PAPUS_DEL_LOL){
+        let soloqData = await getSoloQInfoForName(papu);
+        if(soloqData) soloqData.name = papu;
+        if(!soloqData) soloqData = { "name": papu}
+        // console.log("soloq data de: " + papu, soloqData)
+        data.push(await soloqData);
+    }
+    // console.log("Esta es la data de todos: ", data);
+
+    const sortedData = sortData(data);
+    return data;
+}
+
+
+const TIER_ORDER = {
+    IRON: 1,
+    BRONZE: 2,
+    SILVER: 3,
+    GOLD: 4,
+    PLATINUM: 5,
+    EMERALD: 6,
+    DIAMOND: 7
+};
+
+const TRANSLATE = {
+    IRON: "Hierro",
+    BRONZE: "Bronce",
+    SILVER: "Platita",
+    GOLD: "Oro",
+    PLATINUM: "Platino",
+    EMERALD: "Esmeralda",
+    DIAMOND: "Diamante"
+};
+
+function sortData(data){
+    return data.sort((a, b) => {
+        // Si alguno no tiene tier (por ejemplo cuando no juega soloq)
+        if (!a.tier && !b.tier) return 0;
+        if (!a.tier) return 1;   // el que no tiene soloq va al final
+        if (!b.tier) return -1;
+
+        const tierA = TIER_ORDER[a.tier];
+        const tierB = TIER_ORDER[b.tier];
+
+        // Primero ordenar por tier
+        if (tierA !== tierB) {
+            return tierB - tierA; // más alto primero
+        }
+
+        // Si están en el mismo tier, ordenar por LP
+        return b.leaguePoints - a.leaguePoints;
+    });
+}
+
+async function getTopMessage(soloqData){
+    let message = 
+        "# <:leagueoflegends:1461245191125078069>  SoloQ Challenge de la grasa 2026 \n" +
+        "-# el ganador se gana la mamá de mati\n \n";
+
+    let position = 1;
+    const validCount = soloqData.filter(d => d.leagueId).length;
+
+    for (const data of soloqData) {
+        // Caso: no jugó SoloQ
+        if (!data.leagueId) {
+            continue;
+        }
+        // Posición
+        let posText = position === 1 ? "**1**" : position.toString();
+        const trophy = position === 1 ? ":trophy: " : "";
+
+        // Si es el último válido → monkeypoop
+        const monkeypoop = position === validCount ? "<:cacavomito:1461261021099331615>" : "";
+
+        const wins = data.wins;
+        const losses = data.losses;
+        const total = wins + losses;
+        const winrate = total > 0 ? ((wins / total) * 100).toFixed(2) : "0.00";
+
+        const fire = data.hotStreak ? " :fire:" : "";
+
+        const elo = TRANSLATE[data.tier] + " " + data.rank + " " + data.leaguePoints + "LP"
+        message += `${posText} - ${trophy}**${data.name.split("#")[0]}** \`${elo}\` (${wins}W ${losses}L ${winrate}% wr)${fire}${monkeypoop}\n`;
+
+        position++;
+    }
+
+    message += "-# :fire: racha de +3"
+
+    message += "\n\n"
+    message += "## <:risa:1428510711822422137> Pequeños perdedores (no jugaron soloq todavía) \n"
+
+    for(const data of soloqData){
+        if (!data.leagueId) {
+            message += `**--** - ${data.name} :chicken:\n`;
+        }
+    }
+
+
+
+    return message;
+}
+
+
+let lastLolContent = null;
+
+async function updateLolTop(client){
+    const lolContent = await getLolTopData();
+    
+    // Lo pasamos a string para poder comparar fácil
+    const newContentString = JSON.stringify(lolContent);
+
+    if (lastLolContent === newContentString) {
+        console.log("El top no cambió, no se actualiza el mensaje.");
+        return;
+    }
+
+    // Si cambió, actualizamos el cache
+    lastLolContent = newContentString;
+
+    const message = await getTopMessage(lolContent);
+
+    const channelId = "1461228635028586549";
+    const channel = await client.channels.fetch(channelId);
+
+    await channel.bulkDelete(1);
+    await channel.send(message);
+
+    console.log("Top actualizado.");
+}
+
+
 module.exports = {
     name: Events.ClientReady,
     once: true,
@@ -98,18 +238,24 @@ module.exports = {
             if (intervalRunning) return;
             intervalRunning = true;
             try {
-                const kickLive = await checkKickLive();
-                const channel = await client.channels.fetch(CHANNEL_ID);
-                // console.log(`Estado actual: Kick live: ${kickLive}, Mati live: ${matiLive}`);
-            // --- Kick ---
-            if (kickLive && !matiLive) {
-                matiLive = true;
-                channel.send(`🔴 ¡**${NOMBRE_MATI}** está en vivo en Kick! https://kick.com/${NOMBRE_MATI} @here`);
-                client.user.setPresence({ activities: [{ name: `kick.com/${NOMBRE_MATI}`, type: ActivityType.Watching}], status: 'online' });
-            } else if (!kickLive && matiLive) {
-                matiLive = false;
+            //     const kickLive = await checkKickLive();
+            //     const channel = await client.channels.fetch(CHANNEL_ID);
+            //     // console.log(`Estado actual: Kick live: ${kickLive}, Mati live: ${matiLive}`);
+            // // --- Kick ---
+            // if (kickLive && !matiLive) {
+            //     matiLive = true;
+            //     channel.send(`🔴 ¡**${NOMBRE_MATI}** está en vivo en Kick! https://kick.com/${NOMBRE_MATI} @here`);
+            //     client.user.setPresence({ activities: [{ name: `kick.com/${NOMBRE_MATI}`, type: ActivityType.Watching}], status: 'online' });
+            // } else if (!kickLive && matiLive) {
+            //     matiLive = false;
+            //     pickupRandomPresence(client);
+            // }
+
                 pickupRandomPresence(client);
-            }
+
+            // --- Top de lol ---
+            await updateLolTop(client);
+
 
             }
             catch (err) {
@@ -119,7 +265,8 @@ module.exports = {
                 intervalRunning = false;
             }
 
-        }, 180000);
+        // }, 180000);
+        }, 30000);
         // }, 20000); // 20 segundos para pruebas
     },
 };
