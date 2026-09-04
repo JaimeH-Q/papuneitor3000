@@ -3,74 +3,29 @@ const { Events, ActivityType, MessageActivityType, time, TimestampStyles } = req
 const { getSoloQInfoForName } = require("../my-modules/riotGamesLib")
 // TikTok removed: no longer required
 
-const NOMBRE_MATI = "matiasvi123"; 
+const NOMBRE_MATI = process.env.TWITCH_CHANNEL || "matiasvi123"; 
 const CHANNEL_ID = "1407132833763426385"; 
 
 
 // "IIIIIllIIIII#LAS"
-const PAPUS_DEL_LOL = ["LGL iJaimexARG#SDLG","LGL OneEyedKing#DEAD","LGLnachitomack#SDLG","LGL ImFerPe#SDLG","LGL MatiASvi#7557","TSTpredictionOP#Yorsh"
-    ,"OMG ÇrîmsønĄbbÿš#OMG"]
+const PAPUS_DEL_LOL = ["LGL iJaimexARG#SDLG","LGL iNeedResets#AGAIN","LGLnachitomack#SDLG","LGL ImFerPe#SDLG","LGL MatiASvi#7557"]
 
-let matiLive = false; 
-// TikTok logic removed completely
+let matiLive = false;
 
-async function checkKickLive() {
+async function checkTwitchLive() {
     try {
-        // Add browser-like headers so the request looks like it comes from a real browser
-        const headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
-            'Referer': `https://kick.com/${NOMBRE_MATI}`,
-            'Origin': 'https://kick.com',
-            'Sec-Fetch-Site': 'same-origin',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Dest': 'empty',
-            'Connection': 'keep-alive',
-            'DNT': '1'
-        };
-
-        const res = await fetch(`https://kick.com/api/v2/channels/${NOMBRE_MATI}`, { headers });
+        const res = await fetch(`https://decapi.me/twitch/uptime/${encodeURIComponent(NOMBRE_MATI)}`);
 
         if (!res.ok) {
             const body = await res.text().catch(() => '<no body>');
-            console.error(`Kick API responded ${res.status}: ${String(body).slice(0,200)}`);
+            console.error(`DecAPI respondió ${res.status}: ${String(body).slice(0, 200)}`);
             return false;
         }
 
-        const data = await res.json().catch(err => {
-            console.error('Failed parsing Kick JSON:', err);
-            return null;
-        });
-
-        if (!data) return false;
-
-        // Diagnostics
-        try {
-            if (data.livestream) {
-                console.log('Kick: livestream present; keys=', Object.keys(data.livestream));
-            } else {
-                console.log('Kick: no livestream field; top-level keys=', Object.keys(data));
-            }
-        } catch (e) {
-            console.log('Kick: response type:', typeof data);
-        }
-
-        // Robust live detection: check explicit is_live, id presence, or non-empty livestream object
-        const ls = data.livestream;
-        const live = Boolean(
-            ls && (
-                ls.is_live === true ||
-                ls.is_live === 'true' ||
-                (typeof ls.id !== 'undefined' && ls.id !== null) ||
-                (Object.keys(ls || {}).length > 0)
-            )
-        );
-
-        console.log('Kick: computed live=', live);
-        return live;
+        const status = (await res.text()).trim().toLowerCase();
+        return !status.includes("offline");
     } catch (err) {
-        console.error('Error chequeando Kick:', err);
+        console.error('Error chequeando Twitch mediante DecAPI:', err);
         return false;
     }
 }
@@ -170,11 +125,11 @@ async function getTopMessage(soloqData){
         "-# el ganador se gana la mamá de mati\n \n";
 
     let position = 1;
-    const validCount = soloqData.filter(d => d.leagueId).length;
+    const validCount = soloqData.filter(d => d.queueType === "RANKED_SOLO_5x5").length;
 
     for (const data of soloqData) {
         // Caso: no jugó SoloQ
-        if (!data.leagueId) {
+        if (data.queueType !== "RANKED_SOLO_5x5") {
             continue;
         }
         // Posición
@@ -203,7 +158,7 @@ async function getTopMessage(soloqData){
     message += "## <:risa:1428510711822422137> Pequeños perdedores (no jugaron soloq todavía) \n"
 
     for(const data of soloqData){
-        if (!data.leagueId) {
+        if (data.queueType !== "RANKED_SOLO_5x5") {
             message += `**--** - ${data.name} :chicken:\n`;
         }
     }
@@ -264,18 +219,16 @@ module.exports = {
             if (intervalRunning) return;
             intervalRunning = true;
             try {
-            //     const kickLive = await checkKickLive();
-            //     const channel = await client.channels.fetch(CHANNEL_ID);
-            //     // console.log(`Estado actual: Kick live: ${kickLive}, Mati live: ${matiLive}`);
-            // // --- Kick ---
-            // if (kickLive && !matiLive) {
-            //     matiLive = true;
-            //     channel.send(`🔴 ¡**${NOMBRE_MATI}** está en vivo en Kick! https://kick.com/${NOMBRE_MATI} @here`);
-            //     client.user.setPresence({ activities: [{ name: `kick.com/${NOMBRE_MATI}`, type: ActivityType.Watching}], status: 'online' });
-            // } else if (!kickLive && matiLive) {
-            //     matiLive = false;
-            //     pickupRandomPresence(client);
-            // }
+                const twitchLive = await checkTwitchLive();
+                const channel = await client.channels.fetch(CHANNEL_ID);
+                if (twitchLive && !matiLive) {
+                    matiLive = true;
+                    await channel.send(`🔴 ¡**${NOMBRE_MATI}** está en vivo en Kick! https://kick.com/${NOMBRE_MATI} @here`);
+                    client.user.setPresence({ activities: [{ name: `kick.com/${NOMBRE_MATI}`, type: ActivityType.Watching }], status: 'online' });
+                } else if (!twitchLive && matiLive) {
+                    matiLive = false;
+                    pickupRandomPresence(client);
+                }
 
                 pickupRandomPresence(client);
 
@@ -292,7 +245,7 @@ module.exports = {
             }
 
         // }, 180000);
-        }, 30000);
+        }, 60000);
         // }, 20000); // 20 segundos para pruebas
     },
 };

@@ -16,7 +16,7 @@ function addIdToCache(name, puuid){
 
 async function getIDByName(name){
     if(cache[name]){
-        console.log("ID ya existente en cache para " + name)
+        //console.log("ID ya existente en cache para " + name)
         return cache[name]
     }
     try{
@@ -26,7 +26,7 @@ async function getIDByName(name){
 
         const res = await fetch(url);
         if(!res.ok){
-            console.log("Respuesta no ok para obtener el id por el nombre: " + await res.text())
+            //console.log("Respuesta no ok para obtener el id por el nombre: " + await res.text())
             return null;
         }
 
@@ -50,6 +50,7 @@ async function getSoloQInfoForName(name){
         console.log("Respuesta no ok para obtener info de la soloq por el nombre: " + await res.text())
         return null;
     }
+    
     const raw_data = await res.json();
     let soloqData;
     for(entry of raw_data){
