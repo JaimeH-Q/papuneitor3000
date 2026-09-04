@@ -187,7 +187,6 @@ async function updateLolTop(client){
     const newContentString = JSON.stringify(lolContent);
 
     if (lastLolContent === newContentString) {
-        console.log("El top no cambió, no se actualiza el mensaje.");
         return;
     }
 
