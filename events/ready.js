@@ -23,7 +23,7 @@ async function checkTwitchLive() {
         }
 
         const status = (await res.text()).trim().toLowerCase();
-        if(!status.includes("offline")){
+        if(!status.includes("offline") && !status.includes("too many requests")){
             console.log(`DecAPI indica que ${NOMBRE_MATI} está en vivo: ${status}`);
         }
         return !status.includes("offline");
